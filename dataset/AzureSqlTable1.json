@@ -1,0 +1,32 @@
+{
+	"name": "AzureSqlTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSQLTest",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "c",
+				"type": "nvarchar"
+			},
+			{
+				"name": "a",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "b",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Table_1"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

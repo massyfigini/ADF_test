@@ -1,0 +1,123 @@
+{
+	"name": "AzureSqlTable2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSQLTest",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "ProjectSK",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "IterationSK",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "IterationId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "IterationName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Number",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "IterationPath",
+				"type": "nvarchar"
+			},
+			{
+				"name": "StartDate",
+				"type": "datetimeoffset",
+				"scale": 7
+			},
+			{
+				"name": "EndDate",
+				"type": "datetimeoffset",
+				"scale": 7
+			},
+			{
+				"name": "IterationLevel1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IterationLevel2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IterationLevel3",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IterationLevel4",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IterationLevel5",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IterationLevel6",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IterationLevel7",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IterationLevel8",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IterationLevel9",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IterationLevel10",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IterationLevel11",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IterationLevel12",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IterationLevel13",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IterationLevel14",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Depth",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "IsEnded",
+				"type": "bit"
+			},
+			{
+				"name": "AnalyticsUpdatedDate",
+				"type": "datetimeoffset",
+				"scale": 7
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Test_OData"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

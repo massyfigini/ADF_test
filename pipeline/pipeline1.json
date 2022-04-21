@@ -1,0 +1,302 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ODataSource",
+						"httpRequestTimeout": "00:05:00"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "ProjectSK",
+									"type": "Guid"
+								},
+								"sink": {
+									"name": "ProjectSK",
+									"type": "Guid"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationSK",
+									"type": "Guid"
+								},
+								"sink": {
+									"name": "IterationSK",
+									"type": "Guid"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationId",
+									"type": "Guid"
+								},
+								"sink": {
+									"name": "IterationId",
+									"type": "Guid"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IterationName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Number",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Number",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationPath",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IterationPath",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "StartDate",
+									"type": "DateTimeOffset"
+								},
+								"sink": {
+									"name": "StartDate",
+									"type": "DateTimeOffset"
+								}
+							},
+							{
+								"source": {
+									"name": "EndDate",
+									"type": "DateTimeOffset"
+								},
+								"sink": {
+									"name": "EndDate",
+									"type": "DateTimeOffset"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationLevel1",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IterationLevel1",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationLevel2",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IterationLevel2",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationLevel3",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IterationLevel3",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationLevel4",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IterationLevel4",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationLevel5",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IterationLevel5",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationLevel6",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IterationLevel6",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationLevel7",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IterationLevel7",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationLevel8",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IterationLevel8",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationLevel9",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IterationLevel9",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationLevel10",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IterationLevel10",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationLevel11",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IterationLevel11",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationLevel12",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IterationLevel12",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationLevel13",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IterationLevel13",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IterationLevel14",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IterationLevel14",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Depth",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Depth",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "IsEnded",
+									"type": "Boolean"
+								},
+								"sink": {
+									"name": "IsEnded",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "AnalyticsUpdatedDate",
+									"type": "DateTimeOffset"
+								},
+								"sink": {
+									"name": "AnalyticsUpdatedDate",
+									"type": "DateTimeOffset"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ODataResource1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureSqlTable2",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-02-15T15:10:02Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
