@@ -1,0 +1,43 @@
+{
+	"name": "StorageToSharepoint",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web Activity",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-121.westeurope.logic.azure.com:443/workflows/9bf52d9bf1e24d508832b182e58c69c0/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=QvNMx6ZuLOI8dcplUEup_ROabf1eohslEmovPWn8hpI",
+					"method": "POST",
+					"body": {
+						"value": "{\n\"DataFactoryName\": \"@{pipeline().DataFactory}\",\n\"Filename\": \"@{pipeline().parameters.Filename}\",\n\"Folder\": \"@{pipeline().parameters.Folder}\",\n\"Blob\": \"@{pipeline().parameters.Blob}\"\n}",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"Filename": {
+				"type": "string",
+				"defaultValue": "ImportedFile.csv"
+			},
+			"Folder": {
+				"type": "string",
+				"defaultValue": "TestFolder"
+			},
+			"Blob": {
+				"type": "string",
+				"defaultValue": "https://massy.blob.core.windows.net/containertestadf/testadf.csv"
+			}
+		},
+		"annotations": []
+	}
+}
