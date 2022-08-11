@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "DFMoveFiles"
+		},
+		"AzureBlobStorageLS_connectionString": {
+			"value": ""
+		},
+		"AzureSQLTest_connectionString": {
+			"value": ""
+		},
+		"OData1_password": {
+			"value": ""
+		},
+		"OData1_properties_typeProperties_url": {
+			"value": "https://analytics.dev.azure.com/ConsulcesiDevTeams/New%20CRM/_odata/v3.0-preview/"
+		},
+		"OData1_properties_typeProperties_userName": {
+			"value": "."
+		}
+	}
+}

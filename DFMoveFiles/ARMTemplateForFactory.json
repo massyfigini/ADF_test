@@ -1,0 +1,826 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "DFMoveFiles"
+		},
+		"AzureBlobStorageLS_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorageLS'"
+		},
+		"AzureSQLTest_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSQLTest'"
+		},
+		"OData1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'OData1'"
+		},
+		"OData1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://analytics.dev.azure.com/ConsulcesiDevTeams/New%20CRM/_odata/v3.0-preview/"
+		},
+		"OData1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "."
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "From SQL to Excel",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "c",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"type": "String",
+											"physicalType": "String",
+											"ordinal": 1
+										}
+									},
+									{
+										"source": {
+											"name": "a",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"type": "String",
+											"physicalType": "String",
+											"ordinal": 2
+										}
+									},
+									{
+										"source": {
+											"name": "b",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"type": "String",
+											"physicalType": "String",
+											"ordinal": 3
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AzureSqlTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DelimitedText1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Send Email",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "From SQL to Excel",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-171.westeurope.logic.azure.com:443/workflows/af292b67a26c4661a955ecb4b9830c59/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=cpL-_OU9_y4R6Pw7F30E20X8drG3mo-zNz_jlP1pKt0",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"value": "{\n\"ADFName\": \"@{pipeline().DataFactory}\",\n\"To\": \"massy@ymail.com\",\n\"Subject\": \"Test ADF\",\n\"HtmlBody\":\"Success!<br>Massy\"\n}",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-12-02T16:33:02Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]",
+				"[concat(variables('factoryId'), '/datasets/DelimitedText1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ODataSource",
+								"httpRequestTimeout": "00:05:00"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ProjectSK",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "ProjectSK",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationSK",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "IterationSK",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationId",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "IterationId",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationName",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IterationName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Number",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "Number",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationPath",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IterationPath",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "StartDate",
+											"type": "DateTimeOffset"
+										},
+										"sink": {
+											"name": "StartDate",
+											"type": "DateTimeOffset"
+										}
+									},
+									{
+										"source": {
+											"name": "EndDate",
+											"type": "DateTimeOffset"
+										},
+										"sink": {
+											"name": "EndDate",
+											"type": "DateTimeOffset"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationLevel1",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IterationLevel1",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationLevel2",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IterationLevel2",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationLevel3",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IterationLevel3",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationLevel4",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IterationLevel4",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationLevel5",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IterationLevel5",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationLevel6",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IterationLevel6",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationLevel7",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IterationLevel7",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationLevel8",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IterationLevel8",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationLevel9",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IterationLevel9",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationLevel10",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IterationLevel10",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationLevel11",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IterationLevel11",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationLevel12",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IterationLevel12",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationLevel13",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IterationLevel13",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IterationLevel14",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IterationLevel14",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Depth",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "Depth",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "IsEnded",
+											"type": "Boolean"
+										},
+										"sink": {
+											"name": "IsEnded",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "AnalyticsUpdatedDate",
+											"type": "DateTimeOffset"
+										},
+										"sink": {
+											"name": "AnalyticsUpdatedDate",
+											"type": "DateTimeOffset"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ODataResource1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureSqlTable2",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-02-15T15:10:02Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ODataResource1')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSQLTest",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "c",
+						"type": "nvarchar"
+					},
+					{
+						"name": "a",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "b",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Table_1"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSQLTest')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSQLTest",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "ProjectSK",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "IterationSK",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "IterationId",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "IterationName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Number",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "IterationPath",
+						"type": "nvarchar"
+					},
+					{
+						"name": "StartDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "EndDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "IterationLevel1",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IterationLevel2",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IterationLevel3",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IterationLevel4",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IterationLevel5",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IterationLevel6",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IterationLevel7",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IterationLevel8",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IterationLevel9",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IterationLevel10",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IterationLevel11",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IterationLevel12",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IterationLevel13",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IterationLevel14",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Depth",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "IsEnded",
+						"type": "bit"
+					},
+					{
+						"name": "AnalyticsUpdatedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Test_OData"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSQLTest')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorageLS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "testadf.csv",
+						"container": "containertestadf"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorageLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorageLS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "SplitDepartments.csv",
+						"container": "containertestadf"
+					},
+					"columnDelimiter": ";",
+					"escapeChar": "\\",
+					"quoteChar": ""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorageLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ODataResource1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OData1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "ODataResource",
+				"schema": [],
+				"typeProperties": {
+					"path": "Iterations"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/OData1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorageLS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorageLS_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSQLTest')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSQLTest_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OData1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "OData",
+				"typeProperties": {
+					"url": "[parameters('OData1_properties_typeProperties_url')]",
+					"authenticationType": "Basic",
+					"userName": "[parameters('OData1_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('OData1_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/StorageToSharepoint')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Web Activity",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-121.westeurope.logic.azure.com:443/workflows/9bf52d9bf1e24d508832b182e58c69c0/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=QvNMx6ZuLOI8dcplUEup_ROabf1eohslEmovPWn8hpI",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"value": "{\n\"DataFactoryName\": \"@{pipeline().DataFactory}\",\n\"Filename\": \"@{pipeline().parameters.Filename}\",\n\"Folder\": \"@{pipeline().parameters.Folder}\",\n\"Blob\": \"@{pipeline().parameters.Blob}\"\n}",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"Filename": {
+						"type": "string",
+						"defaultValue": "ImportedFile.csv"
+					},
+					"Folder": {
+						"type": "string",
+						"defaultValue": "TestFolder"
+					},
+					"Blob": {
+						"type": "string",
+						"defaultValue": "https://massy.blob.core.windows.net/containertestadf/testadf.csv"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		}
+	]
+}
