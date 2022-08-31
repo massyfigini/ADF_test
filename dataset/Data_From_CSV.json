@@ -1,0 +1,12 @@
+{
+	"name": "Data_From_CSV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSQLTest",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
