@@ -1,0 +1,32 @@
+{
+	"name": "Mapped_SQL_Data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "testSynapse.csv",
+				"fileSystem": "fsdl"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			}
+		]
+	}
+}
