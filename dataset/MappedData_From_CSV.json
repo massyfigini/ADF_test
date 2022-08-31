@@ -1,0 +1,31 @@
+{
+	"name": "MappedData_From_CSV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSQLTest",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Field1",
+				"type": "varchar"
+			},
+			{
+				"name": "Field2",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Field3",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DataMapped"
+		}
+	}
+}
