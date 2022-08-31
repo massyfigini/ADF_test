@@ -11,17 +11,53 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorageLS'"
 		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
+		},
+		"AzureDataLakeStorage2_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage2'"
+		},
 		"AzureSQLTest_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSQLTest'"
+		},
+		"Dataverse1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Dataverse1'"
+		},
+		"DynamicsCrm1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'DynamicsCrm1'"
 		},
 		"OData1_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'OData1'"
 		},
+		"SynapseLink_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SynapseLink'"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://synapsedesdl.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorage2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://synapsedesdl.dfs.core.windows.net/"
+		},
+		"Dataverse1_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "m.figini@consulcesi.com"
+		},
+		"DynamicsCrm1_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "m.figini@consulcesi.com"
+		},
 		"OData1_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://analytics.dev.azure.com/ConsulcesiDevTeams/New%20CRM/_odata/v3.0-preview/"
+			"defaultValue": "https://analytics.dev.azure.com/ConsulcesiDevTeams/Application/_odata/v3.0-preview/"
 		},
 		"OData1_properties_typeProperties_userName": {
 			"type": "string",
@@ -32,51 +68,6 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlobStorageLS')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('AzureBlobStorageLS_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSQLTest')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('AzureSQLTest_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/OData1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "OData",
-				"typeProperties": {
-					"url": "[parameters('OData1_properties_typeProperties_url')]",
-					"authenticationType": "Basic",
-					"userName": "[parameters('OData1_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('OData1_password')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/StorageToSharepoint')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -125,6 +116,138 @@
 					}
 				},
 				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorageLS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorageLS_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorage2_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStorage2_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSQLTest')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSQLTest_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dataverse1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "CommonDataServiceForApps",
+				"typeProperties": {
+					"deploymentType": "Online",
+					"serviceUri": "crmconsulcesi.crm4.dynamics.com",
+					"authenticationType": "Office365",
+					"username": "[parameters('Dataverse1_properties_typeProperties_username')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('Dataverse1_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DynamicsCrm1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "DynamicsCrm",
+				"typeProperties": {
+					"deploymentType": "Online",
+					"serviceUri": "https://crmconsulcesi.crm4.dynamics.com/",
+					"authenticationType": "Office365",
+					"username": "[parameters('DynamicsCrm1_properties_typeProperties_username')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('DynamicsCrm1_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OData1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "OData",
+				"typeProperties": {
+					"url": "[parameters('OData1_properties_typeProperties_url')]",
+					"authenticationType": "Basic",
+					"userName": "[parameters('OData1_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('OData1_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SynapseLink')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('SynapseLink_connectionString')]"
+				}
 			},
 			"dependsOn": []
 		},
@@ -292,6 +415,64 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CSV_in_DataLake')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "testSynapse.csv",
+						"fileSystem": "fsdl"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Data_From_CSV')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSQLTest",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "NewTableFromCSV"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSQLTest')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -350,6 +531,116 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText3')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "testSynapse.csv",
+						"fileSystem": "fsdl"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MappedData_From_CSV')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSQLTest",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Field1",
+						"type": "varchar"
+					},
+					{
+						"name": "Field2",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Field3",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "DataMapped"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSQLTest')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Mapped_SQL_Data')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "testSynapse.csv",
+						"fileSystem": "fsdl"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage2')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ODataResource1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -370,17 +661,17 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline')]",
+			"name": "[concat(parameters('factoryName'), '/From DataLakeCSV to SQL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "From SQL to Excel",
+						"name": "From CSV to New Table",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
-							"timeout": "7.00:00:00",
+							"timeout": "0.12:00:00",
 							"retry": 0,
 							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
@@ -389,20 +680,78 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
+								"type": "DelimitedTextSource",
 								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
+									"type": "DelimitedTextReadSettings"
 								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "CSV_in_DataLake",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Data_From_CSV",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "From CSV to Existing Table",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "TRUNCATE TABLE [dbo].[DataMapped]",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"disableMetricsCollection": false
 							},
 							"enableStaging": false,
 							"translator": {
@@ -410,38 +759,35 @@
 								"mappings": [
 									{
 										"source": {
-											"name": "c",
 											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"type": "String",
-											"physicalType": "String",
 											"ordinal": 1
+										},
+										"sink": {
+											"name": "Field1",
+											"type": "String",
+											"physicalType": "varchar"
 										}
 									},
 									{
 										"source": {
-											"name": "a",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
 											"type": "String",
-											"physicalType": "String",
 											"ordinal": 2
+										},
+										"sink": {
+											"name": "Field2",
+											"type": "Int32",
+											"physicalType": "int"
 										}
 									},
 									{
 										"source": {
-											"name": "b",
-											"type": "Int32",
-											"physicalType": "int"
+											"type": "String",
+											"ordinal": 3
 										},
 										"sink": {
-											"type": "String",
-											"physicalType": "String",
-											"ordinal": 3
+											"name": "Field3",
+											"type": "Int32",
+											"physicalType": "int"
 										}
 									}
 								],
@@ -454,356 +800,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "AzureSqlTable1",
+								"referenceName": "CSV_in_DataLake",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "DelimitedText1",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Send Email",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "From SQL to Excel",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://prod-171.westeurope.logic.azure.com:443/workflows/af292b67a26c4661a955ecb4b9830c59/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=cpL-_OU9_y4R6Pw7F30E20X8drG3mo-zNz_jlP1pKt0",
-							"method": "POST",
-							"headers": {},
-							"body": {
-								"value": "{\n\"ADFName\": \"@{pipeline().DataFactory}\",\n\"To\": \"massy@ymail.com\",\n\"Subject\": \"Test ADF\",\n\"HtmlBody\":\"Success!<br>Massy\"\n}",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-12-02T16:33:02Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]",
-				"[concat(variables('factoryId'), '/datasets/DelimitedText1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ODataSource",
-								"httpRequestTimeout": "00:05:00"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "ProjectSK",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "ProjectSK",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationSK",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "IterationSK",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationId",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "IterationId",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationName",
-											"type": "String"
-										},
-										"sink": {
-											"name": "IterationName",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Number",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "Number",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationPath",
-											"type": "String"
-										},
-										"sink": {
-											"name": "IterationPath",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "StartDate",
-											"type": "DateTimeOffset"
-										},
-										"sink": {
-											"name": "StartDate",
-											"type": "DateTimeOffset"
-										}
-									},
-									{
-										"source": {
-											"name": "EndDate",
-											"type": "DateTimeOffset"
-										},
-										"sink": {
-											"name": "EndDate",
-											"type": "DateTimeOffset"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationLevel1",
-											"type": "String"
-										},
-										"sink": {
-											"name": "IterationLevel1",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationLevel2",
-											"type": "String"
-										},
-										"sink": {
-											"name": "IterationLevel2",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationLevel3",
-											"type": "String"
-										},
-										"sink": {
-											"name": "IterationLevel3",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationLevel4",
-											"type": "String"
-										},
-										"sink": {
-											"name": "IterationLevel4",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationLevel5",
-											"type": "String"
-										},
-										"sink": {
-											"name": "IterationLevel5",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationLevel6",
-											"type": "String"
-										},
-										"sink": {
-											"name": "IterationLevel6",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationLevel7",
-											"type": "String"
-										},
-										"sink": {
-											"name": "IterationLevel7",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationLevel8",
-											"type": "String"
-										},
-										"sink": {
-											"name": "IterationLevel8",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationLevel9",
-											"type": "String"
-										},
-										"sink": {
-											"name": "IterationLevel9",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationLevel10",
-											"type": "String"
-										},
-										"sink": {
-											"name": "IterationLevel10",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationLevel11",
-											"type": "String"
-										},
-										"sink": {
-											"name": "IterationLevel11",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationLevel12",
-											"type": "String"
-										},
-										"sink": {
-											"name": "IterationLevel12",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationLevel13",
-											"type": "String"
-										},
-										"sink": {
-											"name": "IterationLevel13",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IterationLevel14",
-											"type": "String"
-										},
-										"sink": {
-											"name": "IterationLevel14",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Depth",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "Depth",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "IsEnded",
-											"type": "Boolean"
-										},
-										"sink": {
-											"name": "IsEnded",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "AnalyticsUpdatedDate",
-											"type": "DateTimeOffset"
-										},
-										"sink": {
-											"name": "AnalyticsUpdatedDate",
-											"type": "DateTimeOffset"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "ODataResource1",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AzureSqlTable2",
+								"referenceName": "MappedData_From_CSV",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -814,12 +818,12 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
-				"annotations": [],
-				"lastPublishTime": "2022-02-15T15:10:02Z"
+				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ODataResource1')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlTable2')]"
+				"[concat(variables('factoryId'), '/datasets/CSV_in_DataLake')]",
+				"[concat(variables('factoryId'), '/datasets/Data_From_CSV')]",
+				"[concat(variables('factoryId'), '/datasets/MappedData_From_CSV')]"
 			]
 		}
 	]
