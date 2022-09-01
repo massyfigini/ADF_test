@@ -1,5 +1,5 @@
 {
-	"name": "pipeline",
+	"name": "From SQL to Excel and Email",
 	"properties": {
 		"activities": [
 			{
